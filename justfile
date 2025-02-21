@@ -15,3 +15,16 @@ coin_rpc_deploy:
 			--etherscan-api-key $TENDERLY_API_KEY \
 			--verifier-url $TENDERLY_RPC_URL/verify/etherscan \
 			-vvvv
+
+chatlist_tenderly_deploy:
+	FOUNDRY_ETHERSCAN_UNKNOWN_CHAIN="{chain = ${TENDERLY_CHAIN_ID}, key = \"${TENDERLY_API_KEY}\", url = \"${TENDERLY_RPC_URL}/verify/etherscan\"}" \
+		forge script script/ChatList.s.sol:ChatListScript \
+			--slow \
+			--rpc-url $TENDERLY_RPC_URL \
+			--account $KEY_NAME \
+			--sender $KEY_ADDRESS \
+			--broadcast \
+			--verify \
+			--etherscan-api-key $TENDERLY_API_KEY \
+			--verifier-url $TENDERLY_RPC_URL/verify/etherscan \
+			-vvvv
