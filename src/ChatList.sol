@@ -20,9 +20,6 @@ contract ChatList {
     // Mapping from user address to their chat contract addresses
     mapping(address => address[]) public userChats;
 
-    // Mapping to track existing chats between users (hash of sorted addresses -> chat address)
-    mapping(bytes32 => address) private userPairToChat;
-
     event ChatCreated(
         address indexed author,
         address indexed recipient,
@@ -30,37 +27,12 @@ contract ChatList {
         uint256 createdAt
     );
 
-    /// @notice Get the unique pair hash for two users
-    /// @dev Orders addresses to ensure same hash regardless of parameter order
-    /// @param user1 First user address
-    /// @param user2 Second user address
-    /// @return bytes32 Hash representing the unique user pair
-    function _getUserPairHash(
-        address user1,
-        address user2
-    ) private pure returns (bytes32) {
-        return
-            keccak256(
-                abi.encodePacked(
-                    user1 < user2 ? user1 : user2,
-                    user1 < user2 ? user2 : user1
-                )
-            );
-    }
-
     /// @notice Creates a new chat between the caller and the recipient
     /// @param recipient The address of the chat recipient
     /// @return chatContract The address of the created chat contract
     function createChat(address recipient) external returns (address) {
         require(recipient != address(0), "Invalid recipient address");
         require(recipient != msg.sender, "Cannot create chat with yourself");
-
-        bytes32 pairHash = _getUserPairHash(msg.sender, recipient);
-        address existingChat = userPairToChat[pairHash];
-        require(
-            existingChat == address(0) || !chats[existingChat].exists,
-            "Chat already exists between users"
-        );
 
         // Deploy new Chat contract
         Chat newChatContract = new Chat(msg.sender, recipient);
@@ -77,7 +49,6 @@ contract ChatList {
         chats[chatContractAddress] = newChat;
         userChats[msg.sender].push(chatContractAddress);
         userChats[recipient].push(chatContractAddress);
-        userPairToChat[pairHash] = chatContractAddress;
 
         emit ChatCreated(
             msg.sender,
