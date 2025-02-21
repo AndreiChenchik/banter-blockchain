@@ -2,7 +2,7 @@
 
 set dotenv-load
 
-[group: 'deploy']
+[group('deploy')]
 coin_rpc_deploy:
 	FOUNDRY_ETHERSCAN_UNKNOWN_CHAIN="{chain = ${TENDERLY_CHAIN_ID}, key = \"${TENDERLY_API_KEY}\", url = \"${TENDERLY_RPC_URL}/verify/etherscan\"}" \
 		forge script script/BanterCoin.s.sol:BanterCoinScript \
@@ -16,6 +16,7 @@ coin_rpc_deploy:
 			--verifier-url $TENDERLY_RPC_URL/verify/etherscan \
 			-vvvv
 
+[group('deploy')]
 chatlist_tenderly_deploy:
 	FOUNDRY_ETHERSCAN_UNKNOWN_CHAIN="{chain = ${TENDERLY_CHAIN_ID}, key = \"${TENDERLY_API_KEY}\", url = \"${TENDERLY_RPC_URL}/verify/etherscan\"}" \
 		forge script script/ChatList.s.sol:ChatListScript \
@@ -29,6 +30,7 @@ chatlist_tenderly_deploy:
 			--verifier-url $TENDERLY_RPC_URL/verify/etherscan \
 			-vvvv
 
+[group('deploy')]
 chat_tenderly_verifyContract CHAT_ADDRESS OWNER_ADDRESS RECIPIENT_ADDRESS:
 	FOUNDRY_ETHERSCAN_UNKNOWN_CHAIN="{chain = ${TENDERLY_CHAIN_ID}, key = \"${TENDERLY_API_KEY}\", url = \"${TENDERLY_RPC_URL}/verify/etherscan\"}" \
 		forge verify-contract \
@@ -38,12 +40,15 @@ chat_tenderly_verifyContract CHAT_ADDRESS OWNER_ADDRESS RECIPIENT_ADDRESS:
 			{{CHAT_ADDRESS}} \
 			src/Chat.sol:Chat
 
-[group: 'interact']
+[group('interact')]
 chatlist_tenderly_createChat CHATLIST_ADDRESS RECIPIENT_ADDRESS:
 	cast send {{CHATLIST_ADDRESS}} "createChat(address)" {{RECIPIENT_ADDRESS}} \
 		--rpc-url $TENDERLY_RPC_URL \
-		--account $KEY_NAME 
+		--account $KEY_NAME \
+		--json \
+		-vvvv
 
+[group('interact')]
 chatlist_tenderly_extractChatAddress TX_HASH:
 	cast receipt {{TX_HASH}} \
 		--rpc-url $TENDERLY_RPC_URL \
@@ -52,8 +57,15 @@ chatlist_tenderly_extractChatAddress TX_HASH:
 		| xargs -I {} cast decode-event --sig "_(address, uint256)" "{}" --json \
 		| jq -r '.[0]'
 
+[group('interact')]
 chat_tenderly_sendMessage CHAT_ADDRESS MESSAGE:
 	cast send {{CHAT_ADDRESS}} "sendMessage(string)" "{{MESSAGE}}" \
 		--rpc-url $TENDERLY_RPC_URL \
 		--account $KEY_NAME
 
+[group('chain')]
+chatlist_tenderly_createChain CHATLIST_ADDRESS RECIPIENT_ADDRESS:
+	just chatlist_tenderly_createChat {{CHATLIST_ADDRESS}} {{RECIPIENT_ADDRESS}} \
+		| jq -r '.transactionHash' \
+		| xargs -I {} just chatlist_tenderly_extractChatAddress {} \
+		| xargs -I {} just chat_tenderly_verifyContract {} $KEY_ADDRESS {{RECIPIENT_ADDRESS}}
