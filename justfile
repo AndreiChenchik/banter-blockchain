@@ -2,6 +2,10 @@
 
 set dotenv-load
 
+[group('infra')]
+add_new_account KEY_NAME:
+	cast wallet import --interactive {{KEY_NAME}}
+
 [group('deploy')]
 coin_rpc_deploy:
 	FOUNDRY_ETHERSCAN_UNKNOWN_CHAIN="{chain = ${TENDERLY_CHAIN_ID}, key = \"${TENDERLY_API_KEY}\", url = \"${TENDERLY_RPC_URL}/verify/etherscan\"}" \

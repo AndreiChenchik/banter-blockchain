@@ -6,12 +6,16 @@ import {Chat} from "./Chat.sol";
 /// @title ChatList
 /// @notice Contract for managing user chats
 contract ChatList {
+    // Custom errors
+    error InvalidRecipientAddress();
+    error CannotChatWithYourself();
+    error ChatDoesNotExist();
+
     struct ChatInfo {
         address chatContract;
         address author;
         address recipient;
-        uint256 createdAt;
-        bool exists;
+        uint64 createdAt;
     }
 
     // Mapping from chat address to ChatInfo struct
@@ -31,8 +35,8 @@ contract ChatList {
     /// @param recipient The address of the chat recipient
     /// @return chatContract The address of the created chat contract
     function createChat(address recipient) external returns (address) {
-        require(recipient != address(0), "Invalid recipient address");
-        require(recipient != msg.sender, "Cannot create chat with yourself");
+        if (recipient == address(0)) revert InvalidRecipientAddress();
+        if (recipient == msg.sender) revert CannotChatWithYourself();
 
         // Deploy new Chat contract
         Chat newChatContract = new Chat(msg.sender, recipient);
@@ -42,8 +46,7 @@ contract ChatList {
             chatContract: chatContractAddress,
             author: msg.sender,
             recipient: recipient,
-            createdAt: block.timestamp,
-            exists: true
+            createdAt: uint64(block.timestamp)
         });
 
         chats[chatContractAddress] = newChat;
@@ -80,7 +83,8 @@ contract ChatList {
     function getChat(
         address chatContract
     ) external view returns (ChatInfo memory) {
-        require(chats[chatContract].exists, "Chat does not exist");
+        if (chats[chatContract].chatContract == address(0))
+            revert ChatDoesNotExist();
         return chats[chatContract];
     }
 }

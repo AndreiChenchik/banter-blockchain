@@ -4,6 +4,10 @@ pragma solidity ^0.8.19;
 /// @title Chat
 /// @notice Contract for handling messages between two participants
 contract Chat {
+    // Custom errors
+    error OnlyChatParticipantsCanSendMessages();
+    error MessageCannotBeEmpty();
+
     address public immutable author;
     address public immutable recipient;
 
@@ -14,12 +18,9 @@ contract Chat {
     );
 
     constructor(address _author, address _recipient) {
-        require(_author != address(0), "Invalid author address");
-        require(_recipient != address(0), "Invalid recipient address");
-        require(
-            _author != _recipient,
-            "Author and recipient must be different"
-        );
+        // Note: Redundant validations removed as they're already performed in ChatList
+        // These were duplicating checks from ChatList.createChat() which is the only contract
+        // that creates Chat instances
 
         author = _author;
         recipient = _recipient;
@@ -28,19 +29,10 @@ contract Chat {
     /// @notice Send a message in the chat
     /// @param message The content of the message
     function sendMessage(string calldata message) external {
-        require(
-            isParticipant(msg.sender),
-            "Only chat participants can send messages"
-        );
-        require(bytes(message).length > 0, "Message cannot be empty");
+        if (msg.sender != author && msg.sender != recipient)
+            revert OnlyChatParticipantsCanSendMessages();
+        if (bytes(message).length == 0) revert MessageCannotBeEmpty();
 
         emit MessageSent(msg.sender, message, block.timestamp);
-    }
-
-    /// @notice Check if an address is a participant in this chat
-    /// @param user Address to check
-    /// @return bool True if the address is either author or recipient
-    function isParticipant(address user) public view returns (bool) {
-        return user == author || user == recipient;
     }
 }
