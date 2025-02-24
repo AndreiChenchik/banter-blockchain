@@ -58,7 +58,7 @@ contract ChatListTest is Test {
         bool foundAliceBobChat = false;
         bool foundAliceCharlieChat = false;
 
-        for (uint i = 0; i < aliceChats.length; i++) {
+        for (uint256 i = 0; i < aliceChats.length; i++) {
             ChatList.ChatInfo memory chat = aliceChats[i];
             if (chat.recipient == bob && chat.author == alice) {
                 foundAliceBobChat = true;
@@ -79,7 +79,7 @@ contract ChatListTest is Test {
         bool foundBobAliceChat = false;
         bool foundBobCharlieChat = false;
 
-        for (uint i = 0; i < bobChats.length; i++) {
+        for (uint256 i = 0; i < bobChats.length; i++) {
             ChatList.ChatInfo memory chat = bobChats[i];
             if (chat.author == alice && chat.recipient == bob) {
                 foundBobAliceChat = true;

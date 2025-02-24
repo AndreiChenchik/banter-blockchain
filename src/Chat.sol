@@ -11,11 +11,7 @@ contract Chat {
     address public immutable author;
     address public immutable recipient;
 
-    event MessageSent(
-        address indexed sender,
-        string message,
-        uint256 timestamp
-    );
+    event MessageSent(address indexed sender, string message, uint256 timestamp);
 
     constructor(address _author, address _recipient) {
         // Note: Redundant validations removed as they're already performed in ChatList
@@ -29,8 +25,9 @@ contract Chat {
     /// @notice Send a message in the chat
     /// @param message The content of the message
     function sendMessage(string calldata message) external {
-        if (msg.sender != author && msg.sender != recipient)
+        if (msg.sender != author && msg.sender != recipient) {
             revert OnlyChatParticipantsCanSendMessages();
+        }
         if (bytes(message).length == 0) revert MessageCannotBeEmpty();
 
         emit MessageSent(msg.sender, message, block.timestamp);

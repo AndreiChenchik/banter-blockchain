@@ -24,12 +24,7 @@ contract ChatList {
     // Mapping from user address to their chat contract addresses
     mapping(address => address[]) public userChats;
 
-    event ChatCreated(
-        address indexed author,
-        address indexed recipient,
-        address chatContract,
-        uint256 createdAt
-    );
+    event ChatCreated(address indexed author, address indexed recipient, address chatContract, uint256 createdAt);
 
     /// @notice Creates a new chat between the caller and the recipient
     /// @param recipient The address of the chat recipient
@@ -53,12 +48,7 @@ contract ChatList {
         userChats[msg.sender].push(chatContractAddress);
         userChats[recipient].push(chatContractAddress);
 
-        emit ChatCreated(
-            msg.sender,
-            recipient,
-            chatContractAddress,
-            block.timestamp
-        );
+        emit ChatCreated(msg.sender, recipient, chatContractAddress, block.timestamp);
 
         return chatContractAddress;
     }
@@ -80,11 +70,10 @@ contract ChatList {
     /// @notice Get chat by address
     /// @param chatContract The address of the chat contract
     /// @return ChatInfo The chat details
-    function getChat(
-        address chatContract
-    ) external view returns (ChatInfo memory) {
-        if (chats[chatContract].chatContract == address(0))
+    function getChat(address chatContract) external view returns (ChatInfo memory) {
+        if (chats[chatContract].chatContract == address(0)) {
             revert ChatDoesNotExist();
+        }
         return chats[chatContract];
     }
 }

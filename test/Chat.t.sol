@@ -42,11 +42,7 @@ contract ChatTest is Test {
 
         // Expect the event to be emitted with correct parameters
         vm.expectEmit(true, false, false, true);
-        emit Chat.MessageSent(
-            recipient,
-            "Hello from recipient",
-            block.timestamp
-        );
+        emit Chat.MessageSent(recipient, "Hello from recipient", block.timestamp);
 
         chat.sendMessage("Hello from recipient");
     }
@@ -72,10 +68,8 @@ contract ChatTest is Test {
     function test_SendLongMessage() public {
         // Create a very long message (simulating a stress test)
         string memory longMessage = "";
-        for (uint i = 0; i < 100; i++) {
-            longMessage = string(
-                abi.encodePacked(longMessage, "This is a long message. ")
-            );
+        for (uint256 i = 0; i < 100; i++) {
+            longMessage = string(abi.encodePacked(longMessage, "This is a long message. "));
         }
 
         // Send the long message as the author
