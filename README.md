@@ -7,7 +7,7 @@ A decentralized messaging and token platform built with Solidity and Foundry. Th
 ### 1. BanterCoin (BANT)
 - ERC20 compliant token implementation
 - Initial supply of 1,000,000 BANT tokens
-- Built with OpenZeppelin Contracts v5.0
+- Built with OpenZeppelin Contracts v5.2.0
 - Secure and auditable token transfers
 
 ### 2. Chat System
@@ -83,11 +83,29 @@ just coin_rpc_deploy
 just chatlist_tenderly_deploy
 ```
 
-The deployment scripts will:
-- Use the configured RPC endpoint
-- Verify the contracts on the blockchain
-- Output the deployed contract addresses
-- Handle all necessary deployment steps with proper configuration
+3. Verify the Chat contract after creation:
+```bash
+# Verify a Chat contract
+just chat_tenderly_verifyContract CHAT_ADDRESS OWNER_ADDRESS RECIPIENT_ADDRESS
+```
+
+### Contract Interactions
+
+The project provides several commands for interacting with deployed contracts:
+
+```bash
+# Create a new chat
+just chatlist_tenderly_createChat CHATLIST_ADDRESS RECIPIENT_ADDRESS
+
+# Extract a Chat address from transaction receipt
+just chatlist_tenderly_extractChatAddress TX_HASH
+
+# Send a message in a chat
+just chat_tenderly_sendMessage CHAT_ADDRESS "Your message here"
+
+# Create a chat and verify it in one command
+just chatlist_tenderly_createChain CHATLIST_ADDRESS RECIPIENT_ADDRESS
+```
 
 ## Smart Contract Architecture
 
