@@ -1,5 +1,10 @@
 # Banter Blockchain
 
+> [!IMPORTANT]
+> This branch is representing the last state of the project on `forge` infrastructure.
+> Project will be migrated to `hardhat` due to better DX.
+> This branch will be discontinued. 
+
 A decentralized messaging and token platform built with Solidity and Foundry. This project implements both a custom ERC20 token (BanterCoin) and a decentralized chat system that can be used by web3 applications.
 
 ## Core Components
