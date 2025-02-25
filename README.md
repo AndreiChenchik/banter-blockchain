@@ -1,8 +1,7 @@
-# 🏗 Banter Blockchain
+# 💬 Banter Blockchain
+![Tests status](https://github.com/andreichenchik/banter-blockchain/actions/workflows/test.yaml/badge.svg)
 
-<h4 align="center">
-  A decentralized messaging and token platform built on Ethereum
-</h4>
+## A decentralized messaging and token platform built on Ethereum
 
 🧪 Banter Blockchain implements both a custom ERC20 token (BanterCoin) and a decentralized chat system that can be used by web3 applications, built with Scaffold-ETH 2 toolkit.
 
