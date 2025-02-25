@@ -14,5 +14,6 @@ contract BanterCoinTest is Test {
 
     function testName() public view {
         assertEq(instance.name(), "BanterCoin");
+        assertEq(instance.symbol(), "BANT");
     }
 }

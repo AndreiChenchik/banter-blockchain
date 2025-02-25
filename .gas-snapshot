@@ -1,4 +1,4 @@
-BanterCoinTest:testName() (gas: 12920)
+BanterCoinTest:testName() (gas: 18673)
 ChatListTest:test_ChatEventEmission() (gas: 429168)
 ChatListTest:test_ChatsBetweenSameUsersAreIndependent() (gas: 1185374)
 ChatListTest:test_CreateChat() (gas: 433055)
