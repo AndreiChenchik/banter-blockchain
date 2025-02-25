@@ -7,7 +7,7 @@ describe("ChatList", function () {
   let user1: any;
   let user2: any;
   let user3: any;
-  let zeroAddress = ethers.ZeroAddress;
+  const zeroAddress = ethers.ZeroAddress;
 
   before(async () => {
     const [userA, userB, userC] = await ethers.getSigners();

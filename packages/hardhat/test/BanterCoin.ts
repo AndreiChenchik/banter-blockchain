@@ -7,7 +7,7 @@ describe("BanterCoin", function () {
   let recipient: any;
 
   before(async () => {
-    const [deployer, user] = await ethers.getSigners();
+    const [, user] = await ethers.getSigners();
     recipient = user;
 
     const banterCoinFactory = await ethers.getContractFactory("BanterCoin");
