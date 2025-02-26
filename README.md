@@ -88,6 +88,36 @@ yarn start
 
 Visit your app on: `http://localhost:3000`. You can interact with your smart contracts using the `Debug Contracts` page.
 
+## Exposing Your Local Blockchain
+
+If you need to expose your local blockchain to the internet (for mobile testing, third-party integration, etc.), you can use ngrok:
+
+1. Install ngrok if you haven't already:
+```bash
+# Using npm
+npm install -g ngrok
+
+# Using Homebrew on macOS
+brew install ngrok
+```
+
+2. Expose your local blockchain (running on port 8545):
+```bash
+ngrok http 8545
+```
+
+3. Ngrok will provide you with a forwarding URL like `https://a1b2c3d4.ngrok.io`
+
+4. Use this URL in your application:
+   - For HTTP RPC: `https://a1b2c3d4.ngrok.io`
+   - For WebSocket RPC: `wss://a1b2c3d4.ngrok.io`
+
+5. Update your configuration to use these URLs where needed:
+   - For frontend applications, update your RPC provider URL
+   - For wallets or external tools, use the HTTPS URL as the custom RPC endpoint
+
+Note: Ngrok URLs change each time you restart the service unless you have a paid ngrok account. For persistent URLs, consider upgrading to a paid plan.
+
 ## Testing
 
 Run the test suite to ensure all contracts are functioning correctly:
